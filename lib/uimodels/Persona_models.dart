@@ -11,9 +11,7 @@ class PersonaModels extends StatelessWidget {
     return Stack(
       children: [ Container(margin: EdgeInsets.all(6),
             padding: EdgeInsets.all(10),
-            width: 380,
-            height: 130,
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), border: Border.all(width: 2, color: Colors.grey)),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), border: Border.all(width: 2, color: Colors.deepOrange)),
                 child: Row(
                   children:[
                     Container(

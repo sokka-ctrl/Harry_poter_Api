@@ -13,14 +13,14 @@ class BooksModel extends StatelessWidget {
         Container(
           margin: EdgeInsets.all(8),
           padding: EdgeInsets.all(10),
-          width: 400,
-          height: 130,
           decoration: BoxDecoration(
-            border: Border.all(width: 2, color: Colors.grey),
+            border: Border.all(width: 2, color: Colors.green),
             borderRadius: BorderRadius.circular(10),
           ),
           child: Row(
-            children: [Image.network(model.cover, height: 100, width: 70),
+            children: [ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.network(model.cover, height: 100, width: 70)),
               Container(
                 margin: EdgeInsets.only(left: 8),
                 child: Column(
