@@ -14,7 +14,7 @@ class HousesModels extends StatelessWidget {
           margin: EdgeInsets.all(8),
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
-            border: Border.all(width: 2,color: Colors.indigoAccent),borderRadius: BorderRadius.circular(10),
+            border: Border.all(width: 2,color: Colors.deepPurpleAccent),borderRadius: BorderRadius.circular(10),
           ),
           child: Row(
             children: [
