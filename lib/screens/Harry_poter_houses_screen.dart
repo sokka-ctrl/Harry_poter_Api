@@ -14,13 +14,25 @@ List<HarryPoterHousesModel>? listModel = [];
 
 
 class _HarryPoterHousesScreenState extends State<HarryPoterHousesScreen> {
+
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
     Future.sync(() async {
       final list = await getHttp();
-      listModel = list;
+      setState(() {
+        listModel = list;
+      });
     });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Harry Poter houses'),
+        backgroundColor: Colors.deepPurpleAccent,
+      ),
         body: ListView.builder(itemCount: listModel!.length,itemBuilder: (context, index){
           final item = listModel![index];
           return Column(

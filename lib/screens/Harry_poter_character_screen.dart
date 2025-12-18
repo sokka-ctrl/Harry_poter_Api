@@ -14,13 +14,25 @@ final dio = Dio();
 List<HarryModel>? listModel = [];
 
 class _HarryPoterScreenState extends State<HarryPoterScreen> {
+
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
     Future.sync(() async {
       final list = await getHttp();
-      listModel = list;
+      setState(() {
+        listModel = list;
+      });
     });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Harry Poter Characters'),
+        backgroundColor: Colors.blue,
+      ),
       body: Center(
         child: ListView.builder(itemCount: listModel!.length,itemBuilder: (context, index){
           final item = listModel![index];

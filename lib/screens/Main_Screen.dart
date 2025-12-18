@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:harry_poter/screens/Harry_Poter_Screen.dart';
+import 'package:harry_poter/screens/Harry_poter_character_screen.dart';
 import 'package:harry_poter/screens/Harry_poter_books_screen.dart';
 import 'package:harry_poter/screens/Harry_poter_houses_screen.dart';
 import 'package:harry_poter/screens/Harry_poter_spells_screen.dart';
@@ -51,6 +51,7 @@ class MainScreen extends StatelessWidget {
                 GestureDetector(
                     onTap: (){
                       Navigator.push(context, MaterialPageRoute(builder: (context) => HarryPoterHousesScreen()));
+
                     },
                     child: Container(
                       decoration: BoxDecoration(
