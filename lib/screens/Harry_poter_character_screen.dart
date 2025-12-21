@@ -1,6 +1,6 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:harry_poter/models/character/Harry_model.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:harry_poter/cubit/characters/harry_cubit.dart';
 import 'package:harry_poter/uimodels/Persona_models.dart';
 
 class HarryPoterScreen extends StatefulWidget {
@@ -10,20 +10,15 @@ class HarryPoterScreen extends StatefulWidget {
   State<HarryPoterScreen> createState() => _HarryPoterScreenState();
 }
 
-final dio = Dio();
-List<HarryModel>? listModel = [];
 
 class _HarryPoterScreenState extends State<HarryPoterScreen> {
+
+  final cubit = HarryCubit()
+    ..getCharacters();
 
   @override
   void initState() {
     super.initState();
-    Future.sync(() async {
-      final list = await getHttp();
-      setState(() {
-        listModel = list;
-      });
-    });
   }
 
   @override
@@ -34,26 +29,29 @@ class _HarryPoterScreenState extends State<HarryPoterScreen> {
         backgroundColor: Colors.blue,
       ),
       body: Center(
-        child: ListView.builder(itemCount: listModel!.length,itemBuilder: (context, index){
-          final item = listModel![index];
-            return Column(
-              children: [
-                PersonaModels(model: item)
-              ],
-            );
-        })
+          child: BlocBuilder<HarryCubit, HarryState>(
+            bloc: cubit,
+            builder: (context, state) {
+              if (state is Success) {
+                final list = state.listmodels;
+                return ListView.builder(
+                    itemCount: list.length, itemBuilder: (context, index) {
+                  final item = list[index];
+                  return Column(
+                    children: [
+                      PersonaModels(model: item)
+                    ],
+                  );
+                });
+              }else if (state is Error){
+                return Center(
+                  child: Text('please try latter :('),
+                );
+              }
+              return Center(child: CircularProgressIndicator());
+            },
+          )
       ),
     );
-  }
-
-  Future<List<HarryModel>> getHttp() async {
-    final response = await dio.get(
-      'https://potterapi-fedeperin.vercel.app/en/characters',
-    );
-    final data = response.data;
-    final List<HarryModel> list = (data as List)
-        .map((item) => HarryModel.fromJson(item as Map<String, dynamic>))
-        .toList();
-    return list;
   }
 }
