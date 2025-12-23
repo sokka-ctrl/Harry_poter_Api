@@ -1,56 +1,53 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:harry_poter/cubit/books/books_cubit.dart';
+import 'package:harry_poter/bloc/books/books_bloc.dart';
+import 'package:harry_poter/data/books_repository.dart';
 import 'package:harry_poter/uimodels/Books_models.dart';
 
-class HarryPoterBooksScreen extends StatefulWidget {
 
+class HarryPoterBooksScreen extends StatelessWidget {
   const HarryPoterBooksScreen({super.key});
 
   @override
-  State<HarryPoterBooksScreen> createState() => _HarryPoterBooksScreenState();
-}
-
-final cubit = BooksCubit()..getBooks();
-
-class _HarryPoterBooksScreenState extends State<HarryPoterBooksScreen> {
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Harry Poter Books'),
-        backgroundColor: Colors.green,
-      ),
-      body: Center(
-        child: BlocBuilder<BooksCubit, BooksState>(
-          bloc: cubit,
-          builder: (context, state){
-            if (state is BooksSuccess){
-              final list = state.listmodels;
-              return Center(
-                  child: ListView.builder(
-                      itemCount: list.length, itemBuilder: (context, index) {
-                    final item = list[index];
-                    return Column(
-                      children: [
-                        BooksModel(model: item)
-                      ],
-                    );
-                  })
+    return BlocProvider(
+      create: (_) =>
+      BooksBloc(BooksRepository())..add(GetBooksEvent()),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Harry Potter Books'),
+          backgroundColor: Colors.green,
+        ),
+        body: BlocBuilder<BooksBloc, BooksState>(
+          builder: (context, state) {
+            if (state is BooksLoading) {
+              return const Center(
+                child: CircularProgressIndicator(),
               );
             }
-            return Center(child: CircularProgressIndicator());
+
+            if (state is BooksSuccess) {
+              return ListView.builder(
+                itemCount: state.listModels.length,
+                itemBuilder: (context, index) {
+                  return BooksModel(
+                    model: state.listModels[index],
+                  );
+                },
+              );
+            }
+
+            if (state is BooksError) {
+              return Center(
+                child: Text(state.message),
+              );
+            }
+
+            return const SizedBox();
           },
         ),
       ),
     );
   }
-
 }

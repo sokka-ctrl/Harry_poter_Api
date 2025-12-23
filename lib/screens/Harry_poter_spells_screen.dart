@@ -1,49 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:harry_poter/cubit/spells/spell_cubit.dart';
+import 'package:harry_poter/bloc/spells/spell_bloc.dart';
+import 'package:harry_poter/data/spells_repository.dart';
 import 'package:harry_poter/uimodels/Spells_model.dart';
 
-class HarryPoterSpellsScreen extends StatefulWidget {
+class HarryPoterSpellsScreen extends StatelessWidget {
   const HarryPoterSpellsScreen({super.key});
-
-
-  @override
-  State<HarryPoterSpellsScreen> createState() => _HarryPoterSpellsScreenState();
-}
-
-final cubit = SpellCubit()..getSpells();
-
-class _HarryPoterSpellsScreenState extends State<HarryPoterSpellsScreen> {
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Harry Poter Spells'),
-        backgroundColor: Colors.red,
-      ),
-      body: Center(
-        child: BlocBuilder<SpellCubit, SpellState>(
-          bloc: cubit,
+    return BlocProvider(
+      create: (_) =>
+      SpellBloc(SpellsRepository())..add(GetSpellsEvent()),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Harry Potter Spells'),
+          backgroundColor: Colors.red,
+        ),
+        body: BlocBuilder<SpellBloc, SpellState>(
           builder: (context, state) {
-            if (state is SpellSuccess){
-              final list = state.listmodels;
-              return ListView.builder(
-                itemCount: list.length, itemBuilder: (context, index) {
-                final item = list[index];
-                return Column(
-                  children: [
-                    SpellsModel(model: item)
-                  ],
-                );
-              });
+            if (state is SpellLoading) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
             }
-            return Center(child: CircularProgressIndicator());
+
+            if (state is SpellSuccess) {
+              return ListView.builder(
+                itemCount: state.listModels.length,
+                itemBuilder: (context, index) {
+                  return SpellsModel(
+                    model: state.listModels[index],
+                  );
+                },
+              );
+            }
+
+            if (state is SpellError) {
+              return Center(
+                child: Text(state.message),
+              );
+            }
+
+            return const SizedBox();
           },
         ),
       ),

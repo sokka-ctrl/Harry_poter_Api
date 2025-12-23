@@ -1,20 +1,18 @@
-part of 'houses_cubit.dart';
+part of 'houses_bloc.dart';
 
 @immutable
 sealed class HousesState {}
 
 final class HousesInitial extends HousesState {}
 
+final class HousesLoading extends HousesState {}
+
 final class HousesSuccess extends HousesState {
-  final List<HarryPoterHousesModel> listmodels;
+  final List<HarryPoterHousesModel> listModels;
 
-  HousesSuccess(this.listmodels);
+  HousesSuccess(this.listModels);
 }
-final class HousesLoading extends HousesState {
-  final bool isLoading;
 
-  HousesLoading({this.isLoading = false});
-}
 final class HousesError extends HousesState {
   final String message;
 
